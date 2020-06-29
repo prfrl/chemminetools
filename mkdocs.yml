@@ -1,0 +1,15 @@
+site_name: ChemMine Tools
+site_url: http://buster.localdomain/
+nav:
+    - 'Home': 'index.md'
+    - 'Index':
+        - 'general.md'
+        - 'compound.md'
+        - 'similarity-searching.md'
+        - 'similarity-comparison.md'
+        - 'clustering.md'
+        - 'molecular-property.md'
+        - 'chemminer.md'
+        - 'drug-target.md'
+        - 'theory.md'
+        - 'developers.md'
