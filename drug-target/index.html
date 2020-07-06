@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="http://buster.localdomain/drug-target/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Drug-Target Search - ChemMine Tools</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">ChemMine Tools</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Index <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../general/" class="dropdown-item">General Functionality</a>
+</li>
+                                    
+<li>
+    <a href="../compound/" class="dropdown-item">Compound Import, Viewing, and Format Interconversions</a>
+</li>
+                                    
+<li>
+    <a href="../similarity-searching/" class="dropdown-item">Simliarity Searching</a>
+</li>
+                                    
+<li>
+    <a href="../similarity-comparison/" class="dropdown-item">Similarity Comparisons</a>
+</li>
+                                    
+<li>
+    <a href="../clustering/" class="dropdown-item">Clustering and Data Mining</a>
+</li>
+                                    
+<li>
+    <a href="../molecular-property/" class="dropdown-item">Molecular Property Predictions</a>
+</li>
+                                    
+<li>
+    <a href="../chemminer/" class="dropdown-item">Interacting with ChemMine Tools from R</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active">Drug-Target Search</a>
+</li>
+                                    
+<li>
+    <a href="../theory/" class="dropdown-item">Theory: Descriptors, Similarity Measures, and Clustering Schemes</a>
+</li>
+                                    
+<li>
+    <a href="../developers/" class="dropdown-item">For Developers: Contribute a New Tool</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../chemminer/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../theory/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#drug-target-search" class="nav-link">Drug-Target Search</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#search-by-compound" class="nav-link">Search By Compound</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#search-by-target" class="nav-link">Search By Target</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#search-by-target-paralog" class="nav-link">Search By Target Paralog</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#result-tables" class="nav-link">Result Tables</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="drug-target-search">Drug-Target Search</h1>
+<p>Drug-Target Search utilizes the ChEMBL database to query relationships between
+small drug-like molecules and protein targets. There are currently 3 types of
+searches:</p>
+<ol>
+<li>Search By Compound</li>
+<li>Search By Target</li>
+<li>Search By Target Paralog</li>
+</ol>
+<h2 id="search-by-compound">Search By Compound</h2>
+<p>In this type of search, you provide one or more drug molecules (usually
+ChEMBL IDs), and Drug-Target Search will return a list of proteins that the
+drug is known to target.</p>
+<h4 id="database">Database</h4>
+<p>By default, Drug-Target Search expects ChEMBL IDs when searching by compound.
+If you need to use other types of IDs (e.g. PubChem), you may change the
+database type, and ChemMine Tools will translate your IDs via the UniChem
+service.</p>
+<h4 id="workbench">Workbench</h4>
+<p><img alt="dts_cmp_wb" src="../media/dts_cmp_wb.png" /></p>
+<p>Instead of manually inputting compounds, you may retreive compounds from your
+Workbench using the tag system.</p>
+<h4 id="compound-ids">Compound IDs</h4>
+<p><img alt="dts_cmp_cid" src="../media/dts_cmp_cid.png" /></p>
+<p>Use this to manually input compound IDs. You may search for compounds by typing
+its name into the "Compound Name Search" area. The search box will offer
+suggestions as you type. If you notice your desired compound, select it and
+the corresponding ChEMBL ID will be added to your search IDs.</p>
+<h4 id="sample-ids">Sample IDs</h4>
+<p>For demonstration purposes, select "Use Sample IDs" to fill the compound ID
+box with some example ChEMBL IDs. Then click "Search" to continue.</p>
+<h2 id="search-by-target">Search By Target</h2>
+<p>In this type of search, you provide one or more protein targets (usually
+UniProt IDs), and Drug-Target Search will return a list of drug molecules that
+are known to act on the targets. This search mode is essentially the inverse of
+Search By Compound.</p>
+<h4 id="database_1">Database</h4>
+<p>By default, Drug-Target Search expects UniProt IDs when searching by target. If
+you need to use other types of IDs (e.g. Ensembl), you may change the database
+type, and ChemMine Tools will translate your IDs via the UniProt service.</p>
+<h4 id="target-ids">Target IDs</h4>
+<p><img alt="dts_tgt" src="../media/dts_tgt.png" /></p>
+<p>Use this to manually input target IDs. You may search for targets by typing its
+name into the "Target Name Search" area. The search box will offer suggestions
+as you type. If you notice your desired target, select it and the corresponding
+UniProt ID will be added to your search IDs.</p>
+<h4 id="sample-ids_1">Sample IDs</h4>
+<p>For demonstration purposes, select "Use Sample IDs" to fill the target ID box
+with some example UniProt IDs. Then click "Search" to continue.</p>
+<h4 id="include-activity-results">Include Activity Results</h4>
+<p>TODO</p>
+<h2 id="search-by-target-paralog">Search By Target Paralog</h2>
+<p><img alt="dts_pl" src="../media/dts_pl.png" /></p>
+<p>This mode is a variation of Search By Target, and is done in two steps. In the
+first step, you provide one or more protein targets (usually UniProt IDs), and
+Drug-Target Search will expand your query by finding paralogs of your provided
+targets. In the second step, Drug-Target Search performs essentially the same
+lookup as Search By Target.</p>
+<h4 id="paralog-search-tool">Paralog Search Tool</h4>
+<p>Searching paralogs is the first step in Search By Target Paralog. You provide
+UniProt Accession IDs, and Drug-Target Search uses the Ensembl Biomart service
+to find paralogs of your original IDs. After entering your IDs and clicking
+"Add Paralogs", the paralogs of your original IDs will appear in the below
+search list.</p>
+<h4 id="sample-ids_2">Sample IDs</h4>
+<p>For demonstration purposes, select "Use Sample IDs" to fill the Accession ID
+box with some example UniProt IDs. Then click "Add Paralogs" to continue.</p>
+<h4 id="search-list">Search List</h4>
+<p>This search list shows the paralogs of your original IDs. The list is
+organized as units. A search unit comprises the original ID, and its associated
+paralogs. If you want to exclude certain paralogs from the target search,
+uncheck the box next to it. If you want to remove an entire search unit, click
+the trash icon on the right-hand side.</p>
+<h2 id="result-tables">Result Tables</h2>
+<h4 id="by-annotation">By Annotation</h4>
+<p>TODO</p>
+<h4 id="by-activity">By Activity</h4>
+<p>TODO</p>
+<h3 id="table-features">Table Features</h3>
+<p><img alt="dts_tbl_tools" src="../media/dts_tbl_tools.png" /></p>
+<h4 id="showhide-columns">Show/Hide Columns</h4>
+<p>TODO</p>
+<h4 id="showhide-structures">Show/Hide Structures</h4>
+<p>Toggles the visibility of the compound structure. If visible, the structure
+will be placed underneath the ChEMBL ID in each row.</p>
+<h4 id="save-to-csv">Save to CSV</h4>
+<p>Exports the result table to a file in comma-separated value (CSV) format for
+use in other applications. You may export all columns, or only the visible
+columns, to the CSV file.</p>
+<h4 id="select-mode">Select Mode</h4>
+<p>Controls the row selection style of the result table. "Off" disables manual
+selection actions entirely. "Touch" mode is ideal for touchscreen devices. In
+this mode you select/deselect rows by clicking/touching them individually.
+Selecting a different row does not deselect previous rows. "Desktop" mode
+mimicks a traditional desktop file manager. In this mode, only one row may be
+selected by a mouse click. Multiple individual rows may be selected by holding
+Ctrl while clicking rows, and a range of rows may be selected by holding Shift
+while clicking the first and last row of the desired range.</p>
+<h4 id="select-rows">Select Rows</h4>
+<p>"All" automatically selects all rows in the table (including those not on the
+current page). "None" automatically deselects all rows. This behavior is
+irrespective of the Select Mode.</p>
+<h4 id="selected-row-actions">Selected Row Actions</h4>
+<h5 id="add-compounds-to-workbench">Add Compounds to Workbench</h5>
+<p>Add compounds from selected rows to the ChemMine Tools workbench. Selected
+compounds will be checked for duplicates/database availability before being
+committed to workbench.</p>
+<h5 id="add-compound-ids-to-search">Add Compound IDs to Search</h5>
+<p>Add ChEMBL IDs from selected rows to the Compound IDs search box. Selected
+compounds will be deduplicated before being added to the search.</p>
+<h5 id="add-accession-ids-to-search">Add Accession IDs to Search</h5>
+<p>Add Accession IDs from selected rows to the Target IDs search box. Selected
+Accession IDs will be deduplicated before being added to the search.</p>
+<h4 id="search-box">Search box</h4>
+<p>Perform a text search on the result table. The search spans all columns and
+progressively searches as you type.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
